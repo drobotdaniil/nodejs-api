@@ -7,7 +7,7 @@ services:
     - 3000:3000
     - 9222:9222
     volumes: 
-    - C:/Users/Daniil_Drobot/Documents/Preproduction_Practice/nodejs/nodejs-app/src:/src
+    - ./src:/src
     working_dir: "/src"
     command: "sh start.sh" 
   nginx:
@@ -15,4 +15,4 @@ services:
     ports: 
     - 80:80
     volumes:
-    - C:/Users/Daniil_Drobot/Documents/Preproduction_Practice/nodejs/nodejs-app/static:/usr/share/nginx/html
+    - ./static:/usr/share/nginx/html
