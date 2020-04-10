@@ -1,0 +1,18 @@
+version: "3.1"
+
+services: 
+  node: 
+    build: ./node
+    ports: 
+    - 3000:3000
+    - 9222:9222
+    volumes: 
+    - C:/Users/Daniil_Drobot/Documents/Preproduction_Practice/nodejs/nodejs-app/src:/src
+    working_dir: "/src"
+    command: "sh start.sh" 
+  nginx:
+    build: ./nginx
+    ports: 
+    - 80:80
+    volumes:
+    - C:/Users/Daniil_Drobot/Documents/Preproduction_Practice/nodejs/nodejs-app/static:/usr/share/nginx/html
