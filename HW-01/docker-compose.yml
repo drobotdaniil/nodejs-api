@@ -2,7 +2,7 @@ version: "3.1"
 
 services: 
   node: 
-    image: node
+    build: ./node
     ports: 
     - 3000:3000
     - 9222:9222
@@ -11,7 +11,7 @@ services:
     working_dir: "/src"
     command: "sh start.sh" 
   nginx:
-    image: nginx
+    build: ./nginx
     ports: 
     - 80:80
     volumes:
