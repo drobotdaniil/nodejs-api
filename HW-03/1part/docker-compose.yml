@@ -1,0 +1,21 @@
+version: "3.1"
+
+services: 
+  web:
+    container_name: api-nodejs
+    image: node
+    ports: 
+    - 3000:3000
+    volumes:
+    - ./src:/src
+    working_dir: "/src"
+    command: "sh start.sh"
+    links: 
+    - mongodb
+  mongodb:
+    container_name: api-mongodb
+    image: mongo
+    volumes:
+      - ./src/data:/src/data/db
+    ports:
+      - "27017:27017"
