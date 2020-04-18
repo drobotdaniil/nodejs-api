@@ -3,9 +3,10 @@ const url = require('url')
 const controller = require('./controllers')
 const header = require('./headers')
 const utils = require('./utilities')
+require('./mongo-connect')
 
 const port = 3000
-const db = require('./config/db')
+
 
 const server = http.createServer(async (req, res) => {
   const reqUrl = url.parse(req.url, true)
@@ -16,7 +17,7 @@ const server = http.createServer(async (req, res) => {
         if (reqUrl.query.id) {
           controller.getById(reqUrl.query.id, res)
         } else {
-          controller.getAllNotes(req, res)
+          controller.getAllNotes(res)
         }
       } else {
         utils.sendResponse(res, 'Not found', 404, header.error404)

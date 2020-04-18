@@ -1,30 +1,28 @@
 const { createServer } = require('http')
-const fetch = require('node-fetch')
-const redis = require('redis')
+const service = require('./services/services')
 const { parse } = require('url')
 
 const PORT = process.env.PORT || 3000
 
-const client = redis.createClient(process.env.REDIS_URL)
-
 const server = createServer(async (req, res) => {
   const { name } = parse(req.url, true).query
+  if (name) {
+    try {
+      const cache = await service.getCache(name)
 
-  client.get(name, async (err, data) => {
-    if (err) throw err
+      if (cache !== null) {
+        res.end(cache)
+      } else {
+        const data = await service.getWikiData(name)
+        await service.setCache(name, 3600, data)
 
-    if (data !== null) {
-      res.end(data)
-    } else {
-      const response = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=parse&format=json&section=0&page=${name}`
-      )
-      const data = await response.json()
-
-      client.setex(name, 3600, JSON.stringify(data))
-      res.end(JSON.stringify(data))
+        res.end(data)
+      }
+    } catch (err) {
+      console.log(err)
+      res.end('err')
     }
-  })
+  }
 })
 
 server.listen(PORT, () => {

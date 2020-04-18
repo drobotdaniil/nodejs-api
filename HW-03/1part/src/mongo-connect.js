@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const config = require('./config')
+const config = require('./config/config')
 
 mongoose.connect(config.mongodb.uri, {useNewUrlParser: true})
 
@@ -23,4 +23,3 @@ process.on('SIGINT', () => {
 });
 
 module.exports = mongoose
-
