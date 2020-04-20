@@ -1,6 +1,6 @@
 module.exports = {
   mongodb: {
-    uri: 'mongodb://mongodb/test',
-    config: {}
-  }
+    uri: 'mongodb://mongodb/notesList',
+    config: { useNewUrlParser: true },
+  },
 }

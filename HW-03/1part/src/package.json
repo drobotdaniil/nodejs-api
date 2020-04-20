@@ -9,7 +9,7 @@
   "author": "Daniil Drobot <Daniil_Drobot@epam.com>",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.9.9",
+    "mongodb": "^3.5.6",
     "nodemon": "^2.0.3"
   }
 }

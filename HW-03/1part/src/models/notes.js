@@ -1,38 +1,43 @@
-const mongoose = require('mongoose')
-
-const schema = new mongoose.Schema({
-  title: {
-    type: String,
-  },
-  text: {
-    type: String,
-  },
-})
-
-const Notes = mongoose.model('Notes', schema)
+const { ObjectId } = require('mongodb').ObjectId
+const Connect = require('../mongo-connect')
 
 class DataBase {
+  static async init() {
+    const client = await Connect()
+    const db = client.db('notesList')
+    const notes = db.collection('Notes')
+    return notes
+  }
+
   static async saveNote(data) {
+    const Notes = await DataBase.init()
+
     let note = { title: data.title, text: data.text }
 
-    return await Notes.create(note)
+    return (await Notes.insertOne(note)).result
   }
 
   static async getAll() {
-    return await Notes.find({})
+    const Notes = await DataBase.init()
+    return await Notes.find({}).toArray()
   }
 
   static async getById(id) {
-    return await Notes.findById(id)
+    const Notes = await DataBase.init()
+    return await Notes.findOne({ _id: ObjectId(id) })
   }
 
   static async delete(id) {
-    return await Notes.findByIdAndRemove(id)
+    const Notes = await DataBase.init()
+    return await Notes.findOneAndDelete({ _id: ObjectId(id) })
   }
 
   static async update(id, data) {
-    if ((await Notes.updateOne({ _id: id }, { $set: data })).ok)
-      return Notes.findById(id)
+    const Notes = await DataBase.init()
+    if (
+      (await Notes.findOneAndUpdate({ _id: ObjectId(id) }, { $set: data })).ok
+    )
+      return await Notes.findOne({ _id: ObjectId(id) })
   }
 }
 
