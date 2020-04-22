@@ -1,48 +1,71 @@
 const { createServer } = require('http')
 const { parse } = require('url')
-const { Client } = require('pg')
-const config = require('./config/db')
-const PORT = process.env.PORT || 3000
+const { sendResponse } = require('./utilities')
+const { error404, corsHeaders } = require('./headers')
+const mngrCtrl = require('./controllers/managerCtrl')
+const docCtrl = require('./controllers/documentCtrl')
 
-const client = new Client(config)
+const client = require('./pg-connect')
+
+const PORT = process.env.PORT || 3000
 
 const server = createServer(async (req, res) => {
   const reqURL = parse(req.url, true)
+  switch (req.method) {
+    case 'GET':
+      if (reqURL.pathname === '/api/managers') {
+        if (reqURL.query.id) {
+          mngrCtrl.getById(reqURL.query.id, res)
+        } else {
+          mngrCtrl.getAllManagers(res)
+        }
+      } else if (reqURL.pathname === '/api/documents') {
+        if (reqURL.query.id) {
+          docCtrl.getById(reqURL.query.id, res)
+        } else {
+          docCtrl.getAll(res)
+        }
+      } else {
+        sendResponse(res, 'Not Found', 404, error404)
+      }
 
-  if (reqURL.pathname === '/api/get') {
-    const database = await client.query(
-      'SELECT * FROM managers ORDER BY Id ASC'
-    )
+      break
 
-    res.end(
-      JSON.stringify(database.rows)
-    )
-  } else if (reqURL.pathname === '/test') {
-    const text = 'INSERT INTO managers(Name) VALUES($1) RETURNING *'
-    const values = ['brianc']
+    case 'POST':
+      if (reqURL.pathname === '/api/managers/save') {
+        mngrCtrl.saveManager(req, res)
+      } else if (reqURL.pathname === '/api/documents/save') {
+        docCtrl.saveDoc(req, res)
+      }
 
-    const data = await client.query(text, values)
+      break
 
-    res.end(JSON.stringify(data.rows[0]))
+    case 'PUT':
+      if (reqURL.pathname === '/api/managers/update') {
+        mngrCtrl.updateManager(req, res)
+      } else if (reqURL.pathname === '/api/documents/update') {
+        docCtrl.updateDoc(req, res)
+      } else if (reqURL.pathname === '/api/documents/set-manager') {
+        docCtrl.setDoc(reqURL.query.id, reqURL.query.managerId, res)
+      }
+
+      break
+
+    case 'OPTIONS':
+      sendResponse(res, '', 200, corsHeaders)
+      break
+
+    case 'DELETE':
+      if (reqURL.pathname === '/api/managers/delete') {
+        mngrCtrl.deleteManager(reqURL.query.id, res)
+      } else if (reqURL.pathname === '/api/documents/delete') {
+        docCtrl.deleteDoc(reqURL.query.id, res)
+      }
+
+      break
   }
 })
 
-;(async () => {
-  try {
-    await client.connect()
-    await client.query(`CREATE TABLE IF NOT EXISTS managers(
-      id SERIAL PRIMARY KEY, 
-      Name CHARACTER VARYING(30)
-      );`)
-    await client.query(`CREATE TABLE IF NOT EXISTS documents(
-      Id SERIAL PRIMARY KEY, 
-      Content TEXT 
-      );`)
-
-    server.listen(PORT, () => {
-      console.log(`Server started on ${PORT}`)
-    })
-  } catch (err) {
-    console.log(err)
-  }
-})()
+server.listen(PORT, () => {
+  console.log(`Server started on ${PORT}`)
+})
