@@ -1,6 +1,8 @@
-const { sendResponse } = require('../utilities')
-const { ok, error404, error500 } = require('../headers')
+const { sendResponse } = require('../helpers/utilities')
+const { ok, error404, error500 } = require('../helpers/headers')
 const ManagerService = require('../services/manager')
+const { parse } = require('url')
+const { getBody } = require('../helpers/getBody')
 
 exports.getAllManagers = async (res) => {
   try {
@@ -12,9 +14,11 @@ exports.getAllManagers = async (res) => {
   }
 }
 
-exports.getById = async (id, res) => {
+exports.getById = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     const data = await ManagerService.getById(id)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
@@ -24,7 +28,9 @@ exports.getById = async (id, res) => {
 
 exports.saveManager = async (req, res) => {
   try {
-    const data = await ManagerService.save(req)
+    const body = await getBody(req)
+    const data = await ManagerService.save(body)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
@@ -32,9 +38,11 @@ exports.saveManager = async (req, res) => {
   }
 }
 
-exports.deleteManager = async (id, res) => {
+exports.deleteManager = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     await ManagerService.delete(id)
+    
     sendResponse(res, 'DELETED', 200, ok)
   } catch (err) {
     console.log(err)
@@ -44,7 +52,9 @@ exports.deleteManager = async (id, res) => {
 
 exports.updateManager = async (req, res) => {
   try {
-    const data = await ManagerService.update(req)
+    const body = await getBody(req)
+    const data = await ManagerService.update(body)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)

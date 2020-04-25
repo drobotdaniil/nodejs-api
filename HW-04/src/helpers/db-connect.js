@@ -1,4 +1,4 @@
-const config = require('./config/db')
+const config = require('../config/db')
 const { Client } = require('pg')
 
 const client = new Client(config)

@@ -1,6 +1,8 @@
 const DocumentService = require('../services/document')
-const { sendResponse } = require('../utilities')
-const { ok, error404, error500 } = require('../headers')
+const { sendResponse } = require('../helpers/utilities')
+const { ok, error404, error500 } = require('../helpers/headers')
+const { parse } = require('url')
+const { getBody } = require('../helpers/getBody')
 
 exports.getAll = async (res) => {
   try {
@@ -12,9 +14,11 @@ exports.getAll = async (res) => {
   }
 }
 
-exports.getById = async (id, res) => {
+exports.getById = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     const data = await DocumentService.getById(id)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
@@ -24,7 +28,9 @@ exports.getById = async (id, res) => {
 
 exports.saveDoc = async (req, res) => {
   try {
-    const data = await DocumentService.save(req)
+    const body = await getBody(req)
+    const data = await DocumentService.save(body)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
@@ -32,9 +38,11 @@ exports.saveDoc = async (req, res) => {
   }
 }
 
-exports.deleteDoc = async (id, res) => {
+exports.deleteDoc = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     await DocumentService.delete(id)
+
     sendResponse(res, 'DELETED', 200, ok)
   } catch (err) {
     console.log(err)
@@ -44,7 +52,9 @@ exports.deleteDoc = async (id, res) => {
 
 exports.updateDoc = async (req, res) => {
   try {
-    const data = await DocumentService.update(req)
+    const body = await getBody(req)
+    const data = await DocumentService.update(body)
+
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
@@ -52,9 +62,11 @@ exports.updateDoc = async (req, res) => {
   }
 }
 
-exports.setDoc = async (id, managerId, res) => {
+exports.setDoc = async (req, res) => {
   try {
+    const { id, managerId } = parse(req.url, true).query
     const data = await DocumentService.set(id, managerId)
+    
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)

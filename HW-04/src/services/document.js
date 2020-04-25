@@ -1,41 +1,28 @@
-const DB = require('./DB')
+const DatabaseService = require('./database')
 
 class DocumentService {
   static getAll() {
-    return DB.getAll('documents')
+    return DatabaseService.getAll('documents')
   }
 
   static getById(id) {
-    return DB.getById(id, 'documents')
+    return DatabaseService.getById(id, 'documents')
   }
 
-  static async save(req) {
-    const body = await DocumentService.getBody(req)
-    return DB.save('documents', 'content', body.content)
+  static save({content}) {
+    return DatabaseService.save('documents', 'content', content)
   }
 
-  static async update(req) {
-    const body = await DocumentService.getBody(req)
-
-    return DB.update('documents', 'content', body.id, body.data.content)
-  }
-
-  static async getBody(req) {
-    let body = ''
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    return JSON.parse(body)
+  static update({id, content}) {
+    return DatabaseService.update('documents', 'content', id, content)
   }
 
   static delete(id) {
-    return DB.delete('documents', id)
+    return DatabaseService.delete('documents', id)
   }
 
   static set(id, managerId) {
-    return DB.setDoc(id, managerId)
+    return DatabaseService.setDoc(id, managerId)
   }
 }
 

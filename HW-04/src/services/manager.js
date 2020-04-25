@@ -1,37 +1,24 @@
-const DB = require('./DB')
+const DatabaseService = require('./database')
 
 class ManagerService {
   static getAll() {
-    return DB.getAll('managers')
+    return DatabaseService.getAll('managers')
   }
 
   static getById(id) {
-    return DB.getById(id, 'managers')
+    return DatabaseService.getById(id, 'managers')
   }
 
-  static async save(req) {
-    const body = await ManagerService.getBody(req)
-    return DB.save('managers', 'name', body.name)
+  static save({ name }) {
+    return DatabaseService.save('managers', 'name', name)
   }
 
-  static async update(req) {
-    const body = await ManagerService.getBody(req)
-
-    return DB.update('managers', 'name', body.id, body.data.name)
-  }
-
-  static async getBody(req) {
-    let body = ''
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    return JSON.parse(body)
+  static update({id, name}) {
+    return DatabaseService.update('managers', 'name', id, name)
   }
 
   static delete(id) {
-    return DB.delete('managers' ,id)
+    return DatabaseService.delete('managers', id)
   }
 }
 

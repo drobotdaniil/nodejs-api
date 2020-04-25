@@ -1,11 +1,10 @@
 const { createServer } = require('http')
 const { parse } = require('url')
-const { sendResponse } = require('./utilities')
-const { error404, corsHeaders } = require('./headers')
-const mngrCtrl = require('./controllers/managerCtrl')
-const docCtrl = require('./controllers/documentCtrl')
-
-const client = require('./pg-connect')
+const { sendResponse } = require('./helpers/utilities')
+const { error404, corsHeaders } = require('./helpers/headers')
+const managerController = require('./controllers/manager')
+const documentController = require('./controllers/document')
+require('./helpers/db-connect')
 
 const PORT = process.env.PORT || 3000
 
@@ -15,15 +14,15 @@ const server = createServer(async (req, res) => {
     case 'GET':
       if (reqURL.pathname === '/api/managers') {
         if (reqURL.query.id) {
-          mngrCtrl.getById(reqURL.query.id, res)
+          managerController.getById(req, res)
         } else {
-          mngrCtrl.getAllManagers(res)
+          managerController.getAllManagers(res)
         }
       } else if (reqURL.pathname === '/api/documents') {
         if (reqURL.query.id) {
-          docCtrl.getById(reqURL.query.id, res)
+          documentController.getById(req, res)
         } else {
-          docCtrl.getAll(res)
+          documentController.getAll(res)
         }
       } else {
         sendResponse(res, 'Not Found', 404, error404)
@@ -33,20 +32,20 @@ const server = createServer(async (req, res) => {
 
     case 'POST':
       if (reqURL.pathname === '/api/managers/save') {
-        mngrCtrl.saveManager(req, res)
+        managerController.saveManager(req, res)
       } else if (reqURL.pathname === '/api/documents/save') {
-        docCtrl.saveDoc(req, res)
+        documentController.saveDoc(req, res)
       }
 
       break
 
     case 'PUT':
       if (reqURL.pathname === '/api/managers/update') {
-        mngrCtrl.updateManager(req, res)
+        managerController.updateManager(req, res)
       } else if (reqURL.pathname === '/api/documents/update') {
-        docCtrl.updateDoc(req, res)
+        documentController.updateDoc(req, res)
       } else if (reqURL.pathname === '/api/documents/set-manager') {
-        docCtrl.setDoc(reqURL.query.id, reqURL.query.managerId, res)
+        documentController.setDoc(req, res)
       }
 
       break
@@ -57,9 +56,9 @@ const server = createServer(async (req, res) => {
 
     case 'DELETE':
       if (reqURL.pathname === '/api/managers/delete') {
-        mngrCtrl.deleteManager(reqURL.query.id, res)
+        managerController.deleteManager(req, res)
       } else if (reqURL.pathname === '/api/documents/delete') {
-        docCtrl.deleteDoc(reqURL.query.id, res)
+        documentController.deleteDoc(req, res)
       }
 
       break
