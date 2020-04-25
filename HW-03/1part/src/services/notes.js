@@ -1,6 +1,6 @@
-const DB = require('../models/notes')
+const DB = require('./database')
 
-class Notes {
+class NotesService {
   static getById(id) {
     return DB.getById(id)
   }
@@ -9,27 +9,13 @@ class Notes {
     return DB.delete(id)
   }
 
-  static async save(req) {
-    let body = ''
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    return DB.saveNote(JSON.parse(body))
+  static async save(body) {
+    return DB.saveNote(body)
   }
 
-  static async update(req) {
-    let body = ''
-
-    for await (const chunk of req) {
-      body += chunk
-    }
-
-    let parsed = JSON.parse(body)
-
-    return DB.update(parsed.id, parsed.data)
+  static async update({id, title, text}) {
+    return DB.update(id, {title, text})
   }
 }
 
-module.exports = Notes
+module.exports = NotesService

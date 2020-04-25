@@ -1,11 +1,13 @@
-const utils = require('./utilities')
-const header = require('./headers')
-const DB = require('./models/notes')
+const utils = require('./helpers/utilities')
+const header = require('./helpers/headers')
+const { parse } = require('url')
+const DatabaseService = require('./services/database')
 const NotesService = require('./services/notes')
+const { getBody } = require('./helpers/getBody')
 
 exports.getAllNotes = async (res) => {
   try {
-    const data = await DB.getAll()
+    const data = await DatabaseService.getAll()
     utils.sendResponse(res, JSON.stringify(data), 200, header.ok)
   } catch (err) {
     console.error(err)
@@ -13,9 +15,11 @@ exports.getAllNotes = async (res) => {
   }
 }
 
-exports.getById = async (id, res) => {
+exports.getById = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     const data = await NotesService.getById(id)
+
     utils.sendResponse(res, JSON.stringify(data), 200, header.ok)
   } catch (err) {
     console.error(data.err)
@@ -25,7 +29,9 @@ exports.getById = async (id, res) => {
 
 exports.saveNote = async (req, res) => {
   try {
-    const data = await NotesService.save(req)
+    const body = await getBody(req)
+    const data = await NotesService.save(body)
+
     res.end(JSON.stringify(data))
   } catch (err) {
     console.error(data.err)
@@ -33,9 +39,11 @@ exports.saveNote = async (req, res) => {
   }
 }
 
-exports.deleteNote = async (id, res) => {
+exports.deleteNote = async (req, res) => {
   try {
+    const { id } = parse(req.url, true).query
     await NotesService.delete(id)
+
     utils.sendResponse(res, 'DELETED', 200, header.ok)
   } catch (err) {
     console.log(err)
@@ -45,7 +53,9 @@ exports.deleteNote = async (id, res) => {
 
 exports.updateNote = async (req, res) => {
   try {
-    const data = await NotesService.update(req)
+    const body = await getBody(req)
+    const data = await NotesService.update(body)
+    
     utils.sendResponse(res, JSON.stringify(data), 200, header.ok)
   } catch (err) {
     console.error(err)

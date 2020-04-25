@@ -1,9 +1,9 @@
 const http = require('http')
 const url = require('url')
 const controller = require('./controllers')
-const header = require('./headers')
-const utils = require('./utilities')
-require('./mongo-connect')
+const header = require('./helpers/headers')
+const utils = require('./helpers/utilities')
+require('./helpers/mongo-connect')
 
 const port = 3000
 
@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
     case 'GET':
       if (reqUrl.pathname === '/api/tasks') {
         if (reqUrl.query.id) {
-          controller.getById(reqUrl.query.id, res)
+          controller.getById(req, res)
         } else {
           controller.getAllNotes(res)
         }
@@ -33,7 +33,9 @@ const server = http.createServer(async (req, res) => {
       break
     
     case 'PUT':
-      controller.updateNote(req, res)
+      if (reqUrl.pathname === '/api/update') {
+        controller.updateNote(req, res)
+      }
 
       break
 
@@ -44,7 +46,7 @@ const server = http.createServer(async (req, res) => {
 
     case 'DELETE':
       if (reqUrl.pathname === '/api/delete') {
-        controller.deleteNote(reqUrl.query.id, res)
+        controller.deleteNote(req, res)
       }
 
       break
