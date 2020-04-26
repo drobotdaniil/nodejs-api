@@ -1,0 +1,16 @@
+{
+  "name": "hw-03",
+  "version": "1.0.0",
+  "description": "nodejs task",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Daniil Drobot <Daniil_Drobot@epam.com>",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.3",
+    "redis": "^3.0.2"
+  }
+}
