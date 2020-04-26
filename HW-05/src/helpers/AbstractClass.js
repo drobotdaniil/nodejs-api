@@ -1,35 +1,23 @@
 class DB {
-  static findAll(Model) {
-    return Model.findAll({
+  static async findAll(Model) {
+    const result =  await Model.findAll({
       order: [['id', 'ASC']],
     })
+
+    return result.length ? result : 'No searched data'
   }
 
   static async getById(Model, id) {
-    const data = await Model.findAll({
-      where: {
-        id,
-      },
-    })
+    const { dataValues: data } = await Model.findByPk(id)
 
-    if (data.length) {
+    if ([data].length) {
       return data
     } else {
       throw new Error('Not found')
     }
   }
 
-  static async getBody(req) {
-    let body = ''
-    for await (const chunk of req) {
-      body += chunk
-    }
-  
-    return JSON.parse(body)
-  }
-
-  static async update(Model, req) {
-    const data = await DB.getBody(req)
+  static async update(Model, data) {
     const updated = await Model.update(data, { where: { id: data.id } })
 
     if (updated[0]) {
@@ -39,9 +27,7 @@ class DB {
     }
   }
 
-  static async save(Model, req) {
-    const data = await DB.getBody(req)
-
+  static async save(Model, data) {
     return Model.create(data)
   }
 
@@ -51,6 +37,7 @@ class DB {
         id,
       },
     })
+
     if (deleted) {
       return ''
     } else {

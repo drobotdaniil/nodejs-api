@@ -1,24 +1,48 @@
 const Genre = require('../models/Genre')
+const Movie = require('../models/Movie')
+require('../models/Navigation')
 const DB = require('../helpers/AbstractClass')
 
 class GenreService {
-  static async getAll() {
+  static getAll() {
     return DB.findAll(Genre)
   }
 
-  static async getById(id) {
+  static async setGenreToMovie({ genre, name }) {
+    const movie = await Movie.findOne({ where: { name } })
+
+    if (!movie) return 'Movie wasn\'t found'
+    const genreFromDB = await Genre.findOne({ where: { title: genre } })
+
+    if (!genreFromDB) return 'Genre wasn\'t found'
+    movie.addGenre(genreFromDB)
+
+    return 'OK'
+  }
+
+  static async getMoviesByGenre(title) {
+    const genre = await Genre.findOne({ where: { title } })
+
+    if (!genre) return 'Genre wasn\'t found'
+
+    const movies = await genre.getMovies()
+
+    return movies.length ? movies : `Movies with genre: '${title}' wasn't found`
+  }
+
+  static getById(id) {
     return DB.getById(Genre, id)
   }
 
-  static async save(req) {
-    return DB.save(Genre, req)
+  static save(body) {
+    return DB.save(Genre, body)
   }
 
-  static async update(req) {
-    return DB.update(Genre, req)
+  static update(body) {
+    return DB.update(Genre, body)
   }
 
-  static async delete(id) {
+  static delete(id) {
     return DB.delete(Genre, id)
   }
 }

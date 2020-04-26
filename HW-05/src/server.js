@@ -1,9 +1,9 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const { sendResponse } = require('./helpers/utilities')
-const { error404, corsHeaders } = require('./headers')
+const { error404, corsHeaders } = require('./helpers/headers')
 const controller = require('./controller')
-require('./db-connect')
+require('./helpers/db-connect')
 
 const PORT = process.env.PORT || 3000
 
@@ -13,19 +13,23 @@ const server = createServer(async (req, res) => {
     case 'GET':
       if (reqURL.pathname === '/api/directors') {
         if (reqURL.query.id) {
-          controller.getById('Director', reqURL.query.id, res)
+          controller.getById('Director', req, res)
         } else {
           controller.getAll('Director', res)
         }
       } else if (reqURL.pathname === '/api/movies') {
         if (reqURL.query.id) {
-          controller.getById('Movie', reqURL.query.id, res)
+          controller.getById('Movie', req, res)
+        } else if (reqURL.query.genre) {
+          controller.getMoviesByGenre(req, res)
+        } else if (reqURL.query.directorId) {
+          controller.getMoviesByDirector(req, res)
         } else {
           controller.getAll('Movie', res)
         }
       } else if (reqURL.pathname === '/api/genres') {
         if (reqURL.query.id) {
-          controller.getById('Genre', reqURL.query.id, res)
+          controller.getById('Genre', req, res)
         } else {
           controller.getAll('Genre', res)
         }
@@ -42,6 +46,8 @@ const server = createServer(async (req, res) => {
         controller.save('Movie', req, res)
       } else if (reqURL.pathname === '/api/genres/save') {
         controller.save('Genre', req, res)
+      } else if (reqURL.pathname === '/api/movies/set-genre') {
+        controller.setGenreToMovie(req, res)
       }
 
       break
@@ -51,8 +57,6 @@ const server = createServer(async (req, res) => {
         controller.update('Director', req, res)
       } else if (reqURL.pathname === '/api/movies/update') {
         controller.update('Movie', req, res)
-      } else if (reqURL.pathname === '/api/movies/set-director') {
-        controller.setDirector('Movie', req, res)
       } else if (reqURL.pathname === '/api/genres/update') {
         controller.update('Genre', req, res)
       }
@@ -65,11 +69,11 @@ const server = createServer(async (req, res) => {
 
     case 'DELETE':
       if (reqURL.pathname === '/api/directors/delete') {
-        controller.delete('Director', reqURL.query.id, res)
+        controller.delete('Director', req, res)
       } else if (reqURL.pathname === '/api/movies/delete') {
-        controller.delete('Movie', reqURL.query.id, res)
+        controller.delete('Movie', req, res)
       } else if (reqURL.pathname === '/api/genres/delete') {
-        controller.delete('Genre', reqURL.query.id, res)
+        controller.delete('Genre', req, res)
       }
 
       break

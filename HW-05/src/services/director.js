@@ -2,23 +2,32 @@ const Director = require('../models/Director')
 const DB = require('../helpers/AbstractClass')
 
 class DirectorService {
-  static async getAll() {
+  static getAll() {
     return DB.findAll(Director)
   }
 
-  static async getById(id) {
+  static async getMoviesByDirector(id) {
+    const director = await Director.findByPk(id)
+    if (!director) return 'Not found'
+    
+    const movies = await director.getMovies()
+
+    return movies.length ? movies : `Movies with directorId: '${id}' wasn't found`   
+  }
+
+  static getById(id) {
     return DB.getById(Director, id)
   }
 
-  static async save(req) {
-    return DB.save(Director, req)
+  static save(body) {
+    return DB.save(Director, body)
   }
 
-  static async update(req) {
-    return DB.update(Director, req)
+  static update(body) {
+    return DB.update(Director, body)
   }
 
-  static async delete(id) {
+  static delete(id) {
     return DB.delete(Director, id)
   }
 }

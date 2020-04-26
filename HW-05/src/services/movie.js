@@ -2,23 +2,23 @@ const Movie = require('../models/Movie')
 const DB = require('../helpers/AbstractClass')
 
 class MovieService {
-  static async getAll() {
+  static getAll() {
     return DB.findAll(Movie)
   }
 
-  static async getById(id) {
+  static getById(id) {
     return DB.getById(Movie, id)
   }
 
-  static async save(req) {
-    return DB.save(Movie, req)
+  static save(body) {
+    return DB.save(Movie, body)
   }
 
-  static async update(req) {
-    return DB.update(Movie, req)
+  static update(body) {
+    return DB.update(Movie, body)
   }
 
-  static async delete(id) {
+  static delete(id) {
     return DB.delete(Movie, id)
   }
 }

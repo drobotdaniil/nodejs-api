@@ -1,10 +1,14 @@
 const Sequelize = require('sequelize')
-const config = require('./config/db')
+const config = require('../config/db')
 
 const db = new Sequelize('nodejs-db', 'postgres', 'postgres', config)
 
 ;(async () => {
-  await db.sync()
+  try {
+    await db.sync()
+  } catch (err) {
+    throw new Error()
+  }
 })()
 
 module.exports = { db, Sequelize }
