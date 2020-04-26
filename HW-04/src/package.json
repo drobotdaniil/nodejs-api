@@ -1,0 +1,15 @@
+{
+  "name": "04-task",
+  "version": "1.0.0",
+  "description": "nodejs task with postgres",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Daniil Drobot <Daniil_Drobot@epam.com>",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.3",
+    "pg": "^8.0.2"
+  }
+}
