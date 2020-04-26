@@ -6,12 +6,13 @@ class DatabaseService {
     const client = await Connect()
     const db = client.db('notesList')
     const notes = db.collection('Notes')
-    return notes
+    return { client, notes }
   }
 
   static async saveNote(data) {
-    const Notes = await DatabaseService.init()
+    const { notes: Notes, client } = await DatabaseService.init()
     const { result } = await Notes.insertOne(data)
+    client.close()
 
     if (result.ok) {
       return 'Saved'
@@ -21,29 +22,37 @@ class DatabaseService {
   }
 
   static async getAll() {
-    const Notes = await DatabaseService.init()
-    return Notes.find({}).toArray()
+    const { notes: Notes, client } = await DatabaseService.init()
+    const result = Notes.find({}).toArray()
+
+    client.close()
+
+    return result
   }
 
   static async getById(id) {
-    const Notes = await DatabaseService.init()
-    return Notes.findOne({ _id: ObjectId(id) })
+    const { notes: Notes, client } = await DatabaseService.init()
+    const result = Notes.findOne({ _id: ObjectId(id) })
+    client.close()
+    return result
   }
 
   static async delete(id) {
-    const Notes = await DatabaseService.init()
-    return Notes.findOneAndDelete({ _id: ObjectId(id) })
+    const { notes: Notes, client } = await DatabaseService.init()
+    const result = Notes.findOneAndDelete({ _id: ObjectId(id) })
+    client.close()
+    return result
   }
 
   static async update(id, data) {
-    const Notes = await DatabaseService.init()
+    const { notes: Notes, client } = await DatabaseService.init()
 
-    const { ok } = await Notes.findOneAndUpdate(
-      { _id: ObjectId(id) },
-      { $set: data }
-    )
+    const { ok } = await Notes.findOneAndUpdate({ _id: ObjectId(id) }, { $set: data })
+
     if (ok) {
-      return Notes.findOne({ _id: ObjectId(id) })
+      const result = Notes.findOne({ _id: ObjectId(id) })
+      client.close()
+      return result
     } else {
       throw new Error('smthing went wrong')
     }
