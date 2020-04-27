@@ -1,7 +1,7 @@
 const Genre = require('../models/Genre')
 const Movie = require('../models/Movie')
 require('../models/Navigation')
-const DB = require('../helpers/AbstractClass')
+const DB = require('../helpers/database')
 
 class GenreService {
   static getAll() {
@@ -11,10 +11,11 @@ class GenreService {
   static async setGenreToMovie({ genre, name }) {
     const movie = await Movie.findOne({ where: { name } })
 
-    if (!movie) return 'Movie wasn\'t found'
+    if (!movie) throw new Error("Movie wasn't found")
+
     const genreFromDB = await Genre.findOne({ where: { title: genre } })
 
-    if (!genreFromDB) return 'Genre wasn\'t found'
+    if (!genreFromDB) throw new Error("Genre wasn't found")
     movie.addGenre(genreFromDB)
 
     return 'OK'
@@ -23,11 +24,11 @@ class GenreService {
   static async getMoviesByGenre(title) {
     const genre = await Genre.findOne({ where: { title } })
 
-    if (!genre) return 'Genre wasn\'t found'
+    if (!genre) throw new Error("Genre wasn't found")
 
     const movies = await genre.getMovies()
 
-    return movies.length ? movies : `Movies with genre: '${title}' wasn't found`
+    return movies
   }
 
   static getById(id) {

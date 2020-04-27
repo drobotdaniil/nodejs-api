@@ -16,9 +16,9 @@
 # POST:
 
 ## save()
-- /api/directors/save {"fullName": "Dannil", "yearOfBirth": "1997"}
-- /api/movies/save {"name": "Uncharted", "directorId": 2 }
-- /api/genres/save {"title": "comedy"}
+- /api/directors {"fullName": "Dannil", "yearOfBirth": "1997"}
+- /api/movies {"name": "Uncharted", "directorId": 2 }
+- /api/genres {"title": "comedy"}
 
 ## setGenreToMovie()
 - /api/movies/set-genre {"genre": "drama", "name": "Uncharted"}
@@ -26,12 +26,12 @@
 # PUT:
 
 ## update()
-- /api/directors/update {"id": 1, "fullName": "Daniil Drobot", "yearOfBirth": "1997-01-07"}
-- /api/movies/update {"name": "Onward"}
-- /api/genres/update {"id": 1, "title": "drama"}
+- /api/directors {"id": 1, "fullName": "Daniil Drobot", "yearOfBirth": "1997-01-07"}
+- /api/movies {"name": "Onward"}
+- /api/genres {"id": 1, "title": "drama"}
 
 # DELETE:
 
-- /api/directors/delete?id=
-- /api/movies/delete?id=
-- /api/genres/delete?id=
+- /api/directors?id=
+- /api/movies?id=
+- /api/genres?id=

@@ -1,5 +1,5 @@
 const Movie = require('../models/Movie')
-const DB = require('../helpers/AbstractClass')
+const DB = require('../helpers/database')
 
 class MovieService {
   static getAll() {

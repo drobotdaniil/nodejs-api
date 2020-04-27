@@ -1,4 +1,4 @@
-const { db } = require('../helpers/db-connect')
+const { db } = require('../helpers/dbConnect')
 const Movie = require('./Movie')
 const Genre = require('./Genre')
 

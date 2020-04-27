@@ -1,5 +1,5 @@
 const Director = require('../models/Director')
-const DB = require('../helpers/AbstractClass')
+const DB = require('../helpers/database')
 
 class DirectorService {
   static getAll() {
@@ -8,11 +8,11 @@ class DirectorService {
 
   static async getMoviesByDirector(id) {
     const director = await Director.findByPk(id)
-    if (!director) return 'Not found'
+    if (!director) {
+      throw new Error('Not found')
+    }
     
-    const movies = await director.getMovies()
-
-    return movies.length ? movies : `Movies with directorId: '${id}' wasn't found`   
+    return director.getMovies()
   }
 
   static getById(id) {

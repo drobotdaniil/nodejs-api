@@ -1,16 +1,14 @@
 class DB {
   static async findAll(Model) {
-    const result =  await Model.findAll({
+    return Model.findAll({
       order: [['id', 'ASC']],
     })
-
-    return result.length ? result : 'No searched data'
   }
 
   static async getById(Model, id) {
-    const { dataValues: data } = await Model.findByPk(id)
+    const data = await Model.findByPk(id)
 
-    if ([data].length) {
+    if (data) {
       return data
     } else {
       throw new Error('Not found')
@@ -37,12 +35,7 @@ class DB {
         id,
       },
     })
-
-    if (deleted) {
-      return ''
-    } else {
-      throw new Error('Not deleted')
-    }
+    if (!deleted) throw new Error('Not deleted')
   }
 }
 

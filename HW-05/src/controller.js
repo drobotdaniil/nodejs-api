@@ -1,10 +1,10 @@
-const MovieService = require('./services/movie')
 const DirectorService = require('./services/director')
 const GenreService = require('./services/genre')
 const { sendResponse } = require('./helpers/utilities')
 const { ok, error404, error500 } = require('./helpers/headers')
 const { getBody } = require('./helpers/getBody')
 const { parse } = require('url')
+const { getServiceType } = require('./helpers/getServiceType')
 
 exports.getMoviesByDirector = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ exports.getMoviesByDirector = async (req, res) => {
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
-    sendResponse(res, 'Smthing went wrong', 500, error500)
+    sendResponse(res, err.message, 404, error404)
   }
 }
 
@@ -26,7 +26,7 @@ exports.setGenreToMovie = async (req, res) => {
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
-    sendResponse(res, 'Smthing went wrong', 500, error500)
+    sendResponse(res, err.message, 404, error404)
   }
 }
 
@@ -37,13 +37,13 @@ exports.getMoviesByGenre = async (req, res) => {
     sendResponse(res, data, 200, ok)
   } catch (err) {
     console.error(err)
-    sendResponse(res, 'Smthing went wrong', 500, error500)
+    sendResponse(res, err.message, 404, error404)
   }
 }
 
 exports.getAll = async (type, res) => {
   try {
-    const service = serviceType(type)
+    const service = getServiceType(type)
     const data = await service.getAll()
 
     sendResponse(res, data, 200, ok)
@@ -56,7 +56,7 @@ exports.getAll = async (type, res) => {
 exports.getById = async (type, req, res) => {
   try {
     const { id } = parse(req.url, true).query
-    const service = serviceType(type)
+    const service = getServiceType(type)
     const data = await service.getById(id)
 
     sendResponse(res, data, 200, ok)
@@ -68,7 +68,7 @@ exports.getById = async (type, req, res) => {
 
 exports.save = async (type, req, res) => {
   try {
-    const service = serviceType(type)
+    const service = getServiceType(type)
     const body = await getBody(req)
     const data = await service.save(body)
 
@@ -82,19 +82,19 @@ exports.save = async (type, req, res) => {
 exports.delete = async (type, req, res) => {
   try {
     const { id } = parse(req.url, true).query
-    const service = serviceType(type)
+    const service = getServiceType(type)
     await service.delete(id)
 
     sendResponse(res, 'DELETED', 200, ok)
   } catch (err) {
     console.log(err)
-    sendResponse(res, '500 Internal Server Error', 500, error500)
+    sendResponse(res, err.message, 500, error500)
   }
 }
 
 exports.update = async (type, req, res) => {
   try {
-    const service = serviceType(type)
+    const service = getServiceType(type)
     const body = await getBody(req)
     const data = await service.update(body)
 
@@ -107,7 +107,7 @@ exports.update = async (type, req, res) => {
 
 exports.setDirector = async (type, req, res) => {
   try {
-    const service = serviceType(type)
+    const service = getServiceType(type)
     const body = await getBody(req)
     const data = await service.update(body)
 
@@ -116,24 +116,4 @@ exports.setDirector = async (type, req, res) => {
     console.error(err)
     sendResponse(res, '500 Internal Server Error', 500, error500)
   }
-}
-
-const serviceType = (type) => {
-  let service
-
-  switch (type) {
-    case 'Movie':
-      service = MovieService
-      break
-
-    case 'Director':
-      service = DirectorService
-      break
-
-    case 'Genre':
-      service = GenreService
-      break
-  }
-
-  return service
 }

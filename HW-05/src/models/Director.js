@@ -1,4 +1,4 @@
-const { db, Sequelize } = require('../helpers/db-connect')
+const { db, Sequelize } = require('../helpers/dbConnect')
 
 const Director = db.define(
   'director',
