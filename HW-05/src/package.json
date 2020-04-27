@@ -1,0 +1,19 @@
+{
+  "name": "05-task",
+  "version": "1.0.0",
+  "description": "nodejs task with postgres and sequelize",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Daniil Drobot <Daniil_Drobot@epam.com>",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.0.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
