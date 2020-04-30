@@ -1,0 +1,27 @@
+{
+  "name": "hw-06",
+  "version": "1.0.0",
+  "description": "NodeJS API Login",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "node",
+    "login"
+  ],
+  "author": "Daniil Drobot <Daniil_Drobot@epam.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.3",
+    "express-session": "^1.17.1",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0"
+  }
+}
