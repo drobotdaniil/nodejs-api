@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-const passportFacebook = require('../../auth/facebook')
+const passportFacebook = require('../loaders/passport')
 
 router.get('/login', (req, res, next) => {
   res.render('login', {
