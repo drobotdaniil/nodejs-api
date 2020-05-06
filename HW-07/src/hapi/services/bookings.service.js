@@ -8,12 +8,16 @@ class BookingsService {
   }
 
   bookEvent = async (eventId, userId) => {
-    const booking = await this.model.create({
-      eventId,
-      userId
-    });
+    try {
+      const booking = await this.model.create({
+        eventId,
+        userId
+      });
 
-    return await this.model.scope('withModels').findByPk(booking.id);
+      return await this.model.scope('withModels').findByPk(booking.id);
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
   cancelBooking = async (bookingId) => {

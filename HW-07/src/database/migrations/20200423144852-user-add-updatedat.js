@@ -2,7 +2,8 @@ module.exports = {
   up(queryInterface, DataTypes) {
     return queryInterface.addColumn('Users', 'updatedAt', {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
     });
   },
 

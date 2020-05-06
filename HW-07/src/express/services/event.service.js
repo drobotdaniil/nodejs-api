@@ -1,54 +1,66 @@
-const formatDate = date => new Date(date).toISOString();
+const formatDate = (date) => new Date(date).toISOString()
 
-const transformEvent = event => ({
+const transformEvent = (event) => ({
   ...event.dataValues,
-  ...{ date: formatDate(event.date) }
-});
+  ...{ date: formatDate(event.date) },
+})
 
-async function events(db) {
-  const events = await db.Event.scope('withUser').findAll({
-    include: [{
-      model: db.User.scope('withEvents'),
-      as: 'user'
-    }]
-  });
+class EventService {
+  constructor(model, userModel) {
+    this.model = model
+    this.userModel = userModel
+  }
 
-  return events.map(event => transformEvent(event));
-}
+  events = async () => {
+    try {
+      const events = await this.model.scope('withUser').findAll({
+        include: [
+          {
+            model: this.userModel.scope('withEvents'),
+            as: 'user',
+          },
+        ],
+      })
 
-async function createEvent({ title, description, price, date }, userId, db) {
-  const event = await db.Event.create({
-    title,
-    description,
-    price,
-    date,
-    userId
-  });
+      return events.map((event) => transformEvent(event))
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 
-  return await db.Event.scope('withUser').findByPk(event.id);
-}
+  createEvent = async ({ title, description, price, date }, userId) => {
+    try {
+      const event = await this.model.create({
+        title,
+        description,
+        price,
+        date,
+        userId,
+      })
 
-async function deleteEvent(id, db) {
-  const deleted = await db.Event.destroy({ where: { id, } });
+      return await this.model.scope('withUser').findByPk(event.id)
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 
-  if (!deleted) throw new Error('Something went wrong!');
+  deleteEvent = async (id) => {
+    const deleted = await this.model.destroy({ where: { id } })
 
-  return 'DELETED';
-}
+    if (!deleted) throw new Error('Something went wrong!')
 
-async function updateEvent(data, db) {
-  const updated = await db.Event.update(data, { where: { id: data.id } })
+    return 'DELETED'
+  }
 
-  if (updated[0]) {
-    return 'Updated'
-  } else {
-    throw new Error('Something went wrong!')
+  updateEvent = async (data) => {
+    const updated = await this.model.update(data, { where: { id: data.id } })
+
+    if (updated[0]) {
+      return 'Updated'
+    } else {
+      throw new Error('Something went wrong!')
+    }
   }
 }
 
-module.exports = {
-  events,
-  createEvent,
-  deleteEvent,
-  updateEvent,
-}
+module.exports = EventService

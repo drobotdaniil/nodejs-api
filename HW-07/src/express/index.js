@@ -2,15 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan')
 
+const dbContext = require('../database/models');
+
 const rootRouter = require('./routes');
 
 const PORT = 3000;
 
-function createExpressServer(dbContext) {
+function createExpressServer() {
   const app = express();
 
   app.use(bodyParser.json());
   app.use(logger('dev'))
+
   app.use((req, res, next) => {
     req.dbContext = dbContext;
     next();

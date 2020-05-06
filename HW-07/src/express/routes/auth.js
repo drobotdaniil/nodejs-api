@@ -1,47 +1,27 @@
 const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
-
+const di = require('../di')
 const {
-  loginController,
-  signupController
-} = require('../controllers/auth.controller');
+  AuthController,
+  UserValidator,
+  CheckError
+} = di.container 
 
+// console.log(UserValidator)
 const router = Router();
 
 router.post(
   '/login',
-  [
-    check('email').isEmail(),
-    check('password').isLength({ min: 5 }),
-  ],
-  (req, res, next) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({errors: errors.array()});
-    }
-
-    next();
-  },
-  loginController
+  UserValidator.checkUser(),
+  CheckError.handleError,
+  AuthController.login
 );
 
 router.post(
   '/signup',
-  [
-    check('email').isEmail(),
-    check('password').isLength({ min: 5 }),
-  ],
-  (req, res, next) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({errors: errors.array()});
-    }
-
-    next();
-  },
-  signupController
+  UserValidator.checkUser(),
+  CheckError.handleError,
+  AuthController.signup
 );
 
 module.exports = router;

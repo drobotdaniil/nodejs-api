@@ -1,48 +1,47 @@
-async function createValidator(ctx, next) {
-  ctx.checkBody({
-    eventId: {
-      notEmpty: true,
-      matches: {
-        options: [{ min: 2}]
+class BookingValidation {
+  checkEventId = async (ctx, next) => {
+    ctx.checkBody({
+      eventId: {
+        notEmpty: true,
+        matches: {
+          options: [{ min: 2 }],
+        },
+        errorMessage: 'Invalid event id', // Error message for the parameter
       },
-      errorMessage: 'Invalid event id' // Error message for the parameter
-    },
-  });
+    })
 
-  let errors = await ctx.validationErrors();
+    let errors = await ctx.validationErrors()
 
-  if (errors) {
-    ctx.body = errors;
-    ctx.status = 422;
-    return;
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 422
+      return
+    }
+
+    await next()
   }
 
-  await next();
-}
-
-async function deleteValidator(ctx, next) {
-  ctx.checkBody({
-    bookingId: {
-      notEmpty: true,
-      matches: {
-        options: [{ min: 2}]
+  checkBookingId = async (ctx, next) => {
+    ctx.checkBody({
+      bookingId: {
+        notEmpty: true,
+        matches: {
+          options: [{ min: 2 }],
+        },
+        errorMessage: 'Invalid booking id', // Error message for the parameter
       },
-      errorMessage: 'Invalid booking id' // Error message for the parameter
-    },
-  });
+    })
 
-  let errors = await ctx.validationErrors();
+    let errors = await ctx.validationErrors()
 
-  if (errors) {
-    ctx.body = errors;
-    ctx.status = 422;
-    return;
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 422
+      return
+    }
+
+    await next()
   }
-
-  await next();
 }
 
-module.exports = {
-  createValidator,
-  deleteValidator
-}
+module.exports = BookingValidation

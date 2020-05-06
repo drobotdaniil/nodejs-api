@@ -1,24 +1,15 @@
-const router = require('koa-router')();
+const router = require('koa-router')()
 
-const authCheck = require('./auth-check-middleware');
+const authCheck = require('./auth-check-middleware')
+const di = require('../di')
+const { EventController, EventValidation } = di.container
 
-const {
-  createEventController,
-  eventsController,
-  deleteEventController,
-  updateEventController
-} = require('../controllers/events.controller');
+router.post('/', authCheck, EventValidation.checkEvent, EventController.createEvent)
 
-const {
-  createValidator
-} = require('../validators/event.validation');
+router.get('/', EventController.getEvents)
 
-router.post('/', authCheck, createValidator, createEventController);
+router.delete('/', authCheck, EventController.deleteEvent)
 
-router.get('/', authCheck, eventsController);
+router.put('/', authCheck, EventController.updateEvent)
 
-router.delete('/', authCheck, deleteEventController);
-
-router.put('/', authCheck, updateEventController);
-
-module.exports = router;
+module.exports = router

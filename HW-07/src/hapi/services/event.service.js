@@ -34,6 +34,24 @@ class EventService {
     return await this.model.scope('withUser').findByPk(event.id);
   }
 
+  deleteEvent = async (id) => {
+    const deleted = await this.model.destroy({ where: { id } })
+
+    if (!deleted) throw new Error('Something went wrong!')
+
+    return 'DELETED'
+  }
+
+  updateEvent = async (data) => {
+    const updated = await this.model.update(data, { where: { id: data.id } })
+
+    if (updated[0]) {
+      return 'Updated'
+    } else {
+      throw new Error('Something went wrong!')
+    }
+  }
+
 }
 
 module.exports = EventService;

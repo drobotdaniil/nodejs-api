@@ -5,14 +5,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Event.belongsTo(models.User, {
         foreignKey: 'userId',
-        as: 'user'
+        as: 'user',
+        constraints: true,
+        foreignKeyConstraint:true
       });
     }
   }
 
   Event.init({
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUIDV4,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
@@ -38,6 +40,16 @@ module.exports = (sequelize, DataTypes) => {
     date: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: Date.now()
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
       defaultValue: Date.now()
     }
   }, {

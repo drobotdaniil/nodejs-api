@@ -4,16 +4,16 @@ services:
   app:
     container_name: app
     image: node
-    volumes: 
+    volumes:
     - ./src:/src
     ports:
     - 3000:3000
     - 3001:3001
     - 3002:3002
-    depends_on: 
-    - db
-    working_dir: /src
     command: sh start.sh
+    depends_on:
+    - db
+
   db:
     container_name: app_db
     image: postgres
@@ -23,5 +23,3 @@ services:
       POSTGRES_DB: nodejs-db
     ports:
     - 5432:5432
-
-  

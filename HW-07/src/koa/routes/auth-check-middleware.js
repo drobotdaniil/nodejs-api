@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-handleUnauthorized = function (ctx) {
+const handleUnauthorized = function (ctx) {
   ctx.throw(401, 'Unauthorized');
 };
 

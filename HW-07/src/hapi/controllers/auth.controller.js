@@ -3,21 +3,20 @@ class AuthController {
     this.entityService = entityService;
   }
 
-  login = async (req) => {
+  login = async (req, h) => {
     try {
       return await this.entityService.login(req.payload.email, req.payload.password, req.dbContext);
     } catch (err) {
-      throw err;
+      return h.response(err.message).code(400);
     }
   }
 
-  signup = async (req) => {
-  try {
-    return await this.entityService.signup(req.payload.email, req.payload.password, req.dbContext);
-  } catch (err) {
-    throw err;
-  }
-
+  signup = async (req, h) => {
+    try {
+      return await this.entityService.signup(req.payload.email, req.payload.password, req.dbContext);
+    } catch (err) {
+      return h.response(err.message).code(400);
+    }
   }
 }
 

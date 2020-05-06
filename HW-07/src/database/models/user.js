@@ -60,6 +60,16 @@ module.exports = (sequelize, DataTypes) => {
       get() {
         return(() => this.getDataValue('salt'))
       }
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
     }
   }, {
     sequelize,

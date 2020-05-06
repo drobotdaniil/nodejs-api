@@ -1,44 +1,46 @@
-const {
-  events,
-  createEvent,
-  deleteEvent,
-  updateEvent
-} = require('../services/event.service');
+class EventController {
+  constructor(entityService) {
+    this.entityService = entityService
+  }
 
-async function getEventsController(req, res) {
-  const result = await events(req.dbContext);
+  getEvents = async (req, res) => {
+    try {
+      const result = await this.entityService.events();
+  
+      res.send(result);
+    } catch (err) {
+      res.status(400).send(err.message);
+    }
+  }
 
-  res.send(result);
-}
+  createEvent = async (req, res) => {
+    try {
+      const result = await this.entityService.createEvent(req.body, req.userId);
+  
+      res.send(result);
+    } catch (err) {
+      res.status(400).send(err.message);
+    }
+  }
 
-async function createEventController(req, res) {
-  const result = await createEvent(req.body, req.userId, req.dbContext);
+  deleteEvent = async (req, res) => {
+    try {
+      const result = await this.entityService.deleteEvent(req.body.id, req.dbContext);
+      res.send(result)
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
+  }
 
-  res.send(result);
-}
-
-async function deleteEventController(req, res) {
-  try {
-    const result = await deleteEvent(req.body.id, req.dbContext);
-    res.send(result)
-  } catch (e) {
-    res.status(500).send(e.message);
+  updateEvent = async (req, res) => {
+    try {
+      const result = await this.entityService.updateEvent(req.body, req.dbContext)
+  
+      res.send(result)
+    } catch (e) {
+      res.status(500).send(e.message)
+    }
   }
 }
 
-async function updateEventController(req, res) {
-  try {
-    const result = await updateEvent(req.body, req.dbContext)
-
-    res.send(result)
-  } catch (e) {
-    res.status(500).send(e.message)
-  }
-}
-
-module.exports = {
-  getEventsController,
-  createEventController,
-  deleteEventController,
-  updateEventController,
-}
+module.exports = EventController

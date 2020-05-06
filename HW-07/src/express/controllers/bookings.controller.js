@@ -1,29 +1,37 @@
-const {
-  bookings,
-  bookEvent,
-  cancelBooking
-} = require('../services/bookings.service');
+class BookingController {
+  constructor(entityService) {
+    this.entityService = entityService
+  }
 
-async function getBookingsController(req, res) {
-  const result = await bookings(req.dbContext);
+  getBookingsController = async (req, res) => {
+    try {
+      const result = await this.entityService.bookings()
 
-  res.send(result);
+      res.send(result)
+    } catch (err) {
+      res.status(400).send(err.message)
+    }
+  }
+
+  bookEventController = async (req, res) => {
+    try {
+      const result = await this.entityService.bookEvent(req.body.eventId, req.userId)
+
+      res.send(result)
+    } catch (err) {
+      res.status(400).send(err.message)
+    }
+  }
+
+  cancelBooking = async (req, res) => {
+    try {
+      const result = await this.entityService.cancelBooking(req.body.bookingId)
+
+      res.send(result)
+    } catch (err) {
+      res.status(400).send(err.message)
+    }
+  }
 }
 
-async function bookEventController(req, res) {
-  const result = await bookEvent(req.body.eventId, req.userId, req.dbContext);
-
-  res.send(result);
-}
-
-async function cancelBookingController(req, res) {
-  const result = await cancelBooking(req.body.bookingId, req.dbContext);
-
-  res.send(result);
-}
-
-module.exports = {
-  getBookingsController,
-  bookEventController,
-  cancelBookingController
-}
+module.exports = BookingController

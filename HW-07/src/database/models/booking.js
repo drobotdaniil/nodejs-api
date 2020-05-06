@@ -4,19 +4,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Booking.belongsTo(models.Event, {
         foreignKey: 'eventId',
-        as: 'event'
+        as: 'event',
+        constraints: true,
+        foreignKeyConstraint: true
       });
 
       Booking.belongsTo(models.User, {
         foreignKey: 'userId',
-        as: 'user'
+        as: 'user',
+        constraints: true,
+        foreignKeyConstraint:true
       });
     }
   }
 
   Booking.init({
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUIDV4,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
@@ -27,6 +31,16 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
     }
   }, {
     sequelize,

@@ -7,12 +7,12 @@ const router = require('./routes');
 
 const PORT = 3002;
 
-function createKoaServer(dbContext) {
+function createKoaServer() {
   const app = new Koa();
 
   app.use(bodyParser());
   app.use(koaValidator());
-  app.use(logger());
+  app.use(logger())
 
   app.use(async (ctx, next) => {
     try {
@@ -24,10 +24,6 @@ function createKoaServer(dbContext) {
     }
   });
 
-  app.use(async (ctx, next) => {
-    ctx.dbContext = dbContext;
-    await next();
-  });
 
   app.use(async (ctx, next) => {
     console.log(`Koa time: ${Date.now()}`);
@@ -40,7 +36,7 @@ function createKoaServer(dbContext) {
     // catches all unhandled errors
   });
 
-  const server = app.listen(PORT, () => console.log(`Koa server running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`Koa server running on http://localhost:${PORT}`));
 
 }
 

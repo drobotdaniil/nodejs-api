@@ -1,42 +1,42 @@
-async function createValidator(ctx, next) {
-  ctx.checkBody({
-    title: {
-      notEmpty: true,
-      matches: {
-        options: [{ min: 2}]
+class EventValidation {
+  checkEvent = async (ctx, next) => {
+    ctx.checkBody({
+      title: {
+        notEmpty: true,
+        isLength: {
+          options: [{ min: 5 }],
+        },
+        errorMessage: 'Invalid title', // Error message for the parameter
       },
-      errorMessage: 'Invalid title' // Error message for the parameter
-    },
-    description: {
-      notEmpty: true,
-      matches: {
-        options: [{ min: 2}]
+      description: {
+        notEmpty: true,
+        isLength: {
+          options: [{ min: 5 }],
+        },
+        errorMessage: 'Invalid description', // Error message for the parameter
       },
-      errorMessage: 'Invalid description' // Error message for the parameter
-    },
-    price: {
-      notEmpty: true,
-      isInt: {
-        errorMessage: 'Invalid price'
+      price: {
+        notEmpty: true,
+        isInt: {
+          errorMessage: 'Invalid price',
+        },
       },
-    },
-    date: {
-      notEmpty: true,
-      errorMessage: 'Invalid date' // Error message for the parameter
-    },
-  });
+      date: {
+        notEmpty: true,
+        errorMessage: 'Invalid date', // Error message for the parameter
+      },
+    })
 
-  let errors = await ctx.validationErrors();
+    let errors = await ctx.validationErrors()
 
-  if (errors) {
-    ctx.body = errors;
-    ctx.status = 422;
-    return;
+    if (errors) {
+      ctx.body = errors
+      ctx.status = 422
+      return
+    }
+
+    await next()
   }
-
-  await next();
 }
 
-module.exports = {
-  createValidator
-}
+module.exports = EventValidation

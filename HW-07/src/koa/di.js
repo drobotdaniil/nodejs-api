@@ -1,29 +1,11 @@
 const dbContext = require('../database/models')
-const bottle = require('bottlejs').pop('express')
+const bottle = require('bottlejs').pop('koa')
 
-const {
-  AuthController,
-  EventController,
-  BookingController
-} = require('./controllers')
+const { AuthController, EventController, BookingController } = require('./controllers')
 
-const {
-  AuthService,
-  EventService,
-  BookingService
-} = require('./services')
+const { AuthService, EventService, BookingService } = require('./services')
 
-const {
-  UserValidation,
-  EventValidation,
-  BookingValidation
-} = require('./validations')
-
-const CheckError = require('./middlewares/handleError')
-
-bottle.factory('CheckError', function CheckErrorInit() {
-  return new CheckError()
-})
+const { UserValidation, BookingValidation, EventValidation } = require('./validators')
 
 bottle.factory('AuthService', function AuthServiceInit() {
   return new AuthService(dbContext.User)
@@ -31,9 +13,9 @@ bottle.factory('AuthService', function AuthServiceInit() {
 
 bottle.factory('AuthController', function AuthControllerInit(container) {
   return new AuthController(container.AuthService)
-}) 
+})
 
-bottle.factory('UserValidator', function UserValidatorInit() {
+bottle.factory('UserValidation', function UserValidationInit() {
   return new UserValidation()
 })
 

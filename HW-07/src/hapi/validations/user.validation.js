@@ -4,7 +4,7 @@ class UserValidation {
   getCreateValidator = () => {
     return {
       payload: Joi.object({
-        email: Joi.string(),
+        email: Joi.string().email(),
         password: Joi.string()
       })
     };

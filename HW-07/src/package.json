@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "start-express": "nodemon express/index.js",
-    "start-koa": "nodemon koa/index.js",
-    "start-hapi": "nodemon hapi/index.js"
+    "start": "nodemon -L --inspect=0.0.0.0:9222 index.js",
+    "start-express": "node express/index.js",
+    "start-koa": "node koa/index.js",
+    "start-hapi": "node hapi/index.js",
+    "migrate": "sequelize db:migrate"
   },
   "repository": {
     "type": "git",

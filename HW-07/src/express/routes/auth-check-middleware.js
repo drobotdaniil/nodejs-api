@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-handleUnauthorized = function ({ redirect }) {
-  redirect("/auth");
+const handleUnauthorized = function (res) {
+  res.send(401);
 };
 
 module.exports = (req, res, next) => {
