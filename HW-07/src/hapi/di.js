@@ -21,42 +21,54 @@ const {
 } = require('./validations');
 
 
+bottle.factory('UserModel', () => {
+  return dbContext.User
+})
+
+bottle.factory('EventModel', () => {
+  return dbContext.Event
+})
+
+bottle.factory('BookingModel', () => {
+  return dbContext.Booking
+})
+
 // User
-bottle.factory('AuthService', function AccountServiceInit(container) {
-  return new AuthService(dbContext.User);
+bottle.factory('AuthService', (container) => {
+  return new AuthService(container.UserModel);
 });
 
-bottle.factory('AuthController', function AuthControllerInit(container) {
+bottle.factory('AuthController', (container) => {
   return new AuthController(container.AuthService);
 });
 
-bottle.factory('UserValidator', function AuthValidatorInit() {
+bottle.factory('UserValidator', () => {
   return new UserValidator();
 });
 
 // Event
-bottle.factory('EventService', function EventServiceInit(container) {
-  return new EventService(dbContext.Event, dbContext.User);
+bottle.factory('EventService', (container) => {
+  return new EventService(container.EventModel, container.UserModel);
 });
 
-bottle.factory('EventController', function EventControllerInit(container) {
+bottle.factory('EventController', (container) => {
   return new EventController(container.EventService);
 });
 
-bottle.factory('EventValidator', function EventValidatorInit() {
+bottle.factory('EventValidator', () => {
   return new EventValidator();
 });
 
 // Booking
-bottle.factory('BookingService', function BookingServiceInit(container) {
-  return new BookingsService(dbContext.Booking);
+bottle.factory('BookingService', (container) => {
+  return new BookingsService(container.BookingModel);
 });
 
-bottle.factory('BookingController', function BookingControllerInit(container) {
+bottle.factory('BookingController', (container) => {
   return new BookingController(container.BookingService);
 });
 
-bottle.factory('BookingValidator', function BookingValidatorInit() {
+bottle.factory('BookingValidator', () => {
   return new BookingValidator();
 });
 

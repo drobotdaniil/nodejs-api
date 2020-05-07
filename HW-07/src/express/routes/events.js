@@ -5,7 +5,7 @@ const {
   EventValidation,
   CheckError
 } = di.container
-const authCheck = require('./auth-check-middleware');
+const authCheck = require('../middlewares/auth-check-middleware');
 
 const router = Router();
 

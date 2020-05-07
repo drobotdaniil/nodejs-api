@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const authCheck = require('./auth-check-middleware')
+const authCheck = require('../middlewares/auth-check-middleware')
 const di = require('../di')
 const { BookingController, BookingValidation, CheckError } = di.container
 

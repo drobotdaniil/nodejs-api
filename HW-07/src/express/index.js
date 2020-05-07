@@ -2,8 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan')
 
-const dbContext = require('../database/models');
-
 const rootRouter = require('./routes');
 
 const PORT = 3000;
@@ -13,11 +11,6 @@ function createExpressServer() {
 
   app.use(bodyParser.json());
   app.use(logger('dev'))
-
-  app.use((req, res, next) => {
-    req.dbContext = dbContext;
-    next();
-  });
 
   app.use((req, res, next) => {
     console.log(`Express time: ${Date.now()}`);

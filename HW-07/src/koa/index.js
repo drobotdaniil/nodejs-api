@@ -33,7 +33,8 @@ function createKoaServer() {
   app.use(router.routes());
 
   app.on('error', (err, ctx) => {
-    // catches all unhandled errors
+    console.log(err)
+    process.exit(1)
   });
 
   app.listen(PORT, () => console.log(`Koa server running on http://localhost:${PORT}`));

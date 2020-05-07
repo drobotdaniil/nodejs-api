@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator')
 
-class CheckError {
+class ValidationError {
   handleError(req, res, next) {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req)
@@ -12,4 +12,4 @@ class CheckError {
   }
 }
 
-module.exports = CheckError
+module.exports = ValidationError

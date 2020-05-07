@@ -7,39 +7,51 @@ const { AuthService, EventService, BookingService } = require('./services')
 
 const { UserValidation, BookingValidation, EventValidation } = require('./validators')
 
-bottle.factory('AuthService', function AuthServiceInit() {
-  return new AuthService(dbContext.User)
+bottle.factory('UserModel', () => {
+  return dbContext.User
 })
 
-bottle.factory('AuthController', function AuthControllerInit(container) {
+bottle.factory('EventModel', () => {
+  return dbContext.Event
+})
+
+bottle.factory('BookingModel', () => {
+  return dbContext.Booking
+})
+
+bottle.factory('AuthService', (container) => {
+  return new AuthService(container.UserModel)
+})
+
+bottle.factory('AuthController', (container) => {
   return new AuthController(container.AuthService)
 })
 
-bottle.factory('UserValidation', function UserValidationInit() {
+bottle.factory('UserValidation', () => {
   return new UserValidation()
 })
 
-bottle.factory('EventService', function EventServiceInit() {
-  return new EventService(dbContext.Event, dbContext.User)
+bottle.factory('EventService', (container) => {
+  return new EventService(container.EventModel, container.UserModel)
 })
 
-bottle.factory('EventController', function EventControllerInit(container) {
+bottle.factory('EventController', (container) => {
   return new EventController(container.EventService)
 })
 
-bottle.factory('EventValidation', function EventValidationInit() {
+bottle.factory('EventValidation', () => {
   return new EventValidation()
 })
 
-bottle.factory('BookingService', function BookingServiceInit() {
-  return new BookingService(dbContext.Booking)
+bottle.factory('BookingService', (container) => {
+  return new BookingService(container.BookingModel)
 })
 
-bottle.factory('BookingController', function BookingControllerInit(container) {
+bottle.factory('BookingController', (container) => {
   return new BookingController(container.BookingService)
 })
 
-bottle.factory('BookingValidation', function BookingValidationInit() {
+bottle.factory('BookingValidation', () => {
   return new BookingValidation()
 })
 

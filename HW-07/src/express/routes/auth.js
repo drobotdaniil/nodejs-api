@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const { check, validationResult } = require('express-validator');
 const di = require('../di')
 const {
   AuthController,
@@ -7,7 +6,6 @@ const {
   CheckError
 } = di.container 
 
-// console.log(UserValidator)
 const router = Router();
 
 router.post(
